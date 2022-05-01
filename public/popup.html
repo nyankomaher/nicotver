@@ -2,31 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Chrome Extension</title>
+    <title>nicotver</title>
     <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
+
   <div class="app">
-    <p class="counter-label">Counter</p>
-    <div id="counter" class="counter"></div>
+    <p class="title">nicotver</p>
+    <p class="subtitle">にこてぃーばー</p>
+
+    <hr class="divider" />
+
+    <table id="conditions">
+      <tr>
+        <th>チャンネル</th>
+        <td>
+          <select id="channel">
+            <option value="jk1">jk1: NHK総合</option>
+            <option value="jk2">jk2: NHK Eテレ </option>
+            <option value="jk4">jk4: 日本テレビ</option>
+            <option value="jk5">jk5: テレビ朝日</option>
+            <option value="jk6">jk6: TBSテレビ</option>
+            <option value="jk7">jk7: テレビ東京</option>
+            <option value="jk8">jk8: フジテレビ</option>
+            <option value="jk9">jk9: TOKYO MX</option>
+            <option value="jk10">jk10: テレ玉</option>
+            <option value="jk11">jk11: tvk</option>
+            <option value="jk12">jk12: チバテレビ</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>開始日</th>
+        <td><input id="date" type="date"></td>
+      </tr>
+      <tr>
+        <th>開始時刻</th>
+        <td><input id="time" type="time"></td>
+      </tr>
+      <tr>
+        <th>番組時間</th>
+        <td>
+          <select id="duration">
+            <option value="30" selected>30</option>
+            <option value="60">60</option>
+            <option value="90">90</option>
+            <option value="120">120</option>
+            <option value="150">150</option>
+            <option value="180">180</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+
     <div class="button-container">
-      <button id="decrementBtn" class="button">-</button>
-      <button id="incrementBtn" class="button">+</button>
+      <button id="play" class="button">コメント取得</button>
     </div>
 
     <hr class="divider" />
 
-    <p class="title">Chrome Extension is Ready!</p>
-    <p class="subtitle">Start by updating <code>popup.html</code></p>
+    <div id="status"></div>
   </div>
 
   <script src="popup.js"></script>
 
-  <!--
-    This HTML file opens when you click on icon from the toolbar.
-
-    To begin the development, run `npm run watch`.
-    To create a production bundle, use `npm run build`.
-  -->
 </body>
 </html>

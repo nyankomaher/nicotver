@@ -10,8 +10,7 @@ const config = (env, argv) =>
   merge(common, {
     entry: {
       popup: PATHS.src + '/popup.ts',
-      contentScript: PATHS.src + '/contentScript.ts',
-      background: PATHS.src + '/background.ts',
+      nicotver: PATHS.src + '/nicotver.ts',
     },
     devtool: argv.mode === 'production' ? false : 'source-map',
   });

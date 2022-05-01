@@ -16,7 +16,7 @@ html {
 
 body {
   width: 350px;
-  height: 300px;
+  height: 400px;
 }
 
 .app {
@@ -89,4 +89,9 @@ code {
   width: 50px;
   border: 0.5px dashed #000;
   opacity: 0.1;
+}
+
+#conditions th,
+#conditions td {
+  text-align: left;
 }
