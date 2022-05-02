@@ -13,16 +13,13 @@
     "default_title": "Nicotver",
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "storage"
-  ],
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>",
         "*://tver.jp/episodes/*"
       ],
       "run_at": "document_idle",
+      "css": ["nicotver.css"],
       "js": [
         "nicotver.js"
       ]
