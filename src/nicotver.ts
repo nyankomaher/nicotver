@@ -20,7 +20,6 @@ function buildControl(retryCount = 0) {
   }
 
   titles.insertAdjacentHTML('beforebegin', HTMLS.CONTROL);
-  updateOffset(0);
 
   const info = getProgramInfo();
   const channel = document.querySelector<HTMLSelectElement>('.nicotver__conditions__channel')!;
@@ -31,9 +30,13 @@ function buildControl(retryCount = 0) {
   const buttons = document.querySelectorAll<HTMLButtonElement>('.nicotver__offsets__button');
   for (let button of buttons) {
     button.addEventListener('click', () => {
-      updateOffset(Number(button.dataset.offset));
+      updateOffset(Number(button.dataset.offset) + offset);
     })
   }
+  const offsetInput = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
+  offsetInput.addEventListener('input', () => {
+    updateOffset((offsetInput.value === '') ? null : Number(offsetInput.value));
+  })
 
   const execute = document.querySelector<HTMLButtonElement>('.nicotver__conditions__execute')!;
   execute.addEventListener('click', () => {
@@ -50,10 +53,10 @@ function buildControl(retryCount = 0) {
 }
 
 
-function updateOffset(delta: number) {
-  offset += delta;
+function updateOffset(newOffset: number | null) {
+  offset = newOffset || 0;
   const current = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
-  current.value = String(offset);
+  current.value = String(newOffset || '');
 }
 
 
@@ -279,7 +282,9 @@ const HTMLS = {
       <div class="nicotver__offsets">
         <div>コメント時間オフセット</div>
         <button class="nicotver__offsets__button" data-offset="-15">-15</button>
-        <input class="nicotver__offsets__offset" type="text">
+        <div>
+          <input class="nicotver__offsets__offset" type="text" value="0">秒
+        </div>
         <button class="nicotver__offsets__button" data-offset="15">+15</button>
       </div>
     </section>
