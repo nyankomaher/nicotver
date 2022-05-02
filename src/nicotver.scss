@@ -1,3 +1,14 @@
+%button {
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255,255,255,0.08);
+  }
+}
+
 .nicotver {
 
   &__canvas {
@@ -10,33 +21,37 @@
 
   &__controls {
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
     background-color: #282828;
   }
 
-  $condition-mergin: 20px;
+  $condition-margin: 10px;
 
   &__conditions {
-    margin-top: 0;
+    margin: 0;
+
+    &__execute {
+      @extend %button;
+      margin-top: 15px;
+    }
+  }
+
+  &__condition {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
 
-    dt {
-      &:not(:first-child) {
-        margin-left: $condition-mergin;
-      }
+    &:not(:first-child) {
+      margin-top: $condition-margin;
     }
 
     dd {
       margin-left: 10px;
     }
-
-    &__execute {
-      margin-left: $condition-mergin;
-    }
   }
 
   &__offsets {
+    margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -47,14 +62,99 @@
     }
 
     &__button {
-      color: #fff;
-      background-color: transparent;
+      @extend %button;
+    }
+
+    &__offsetWrapper {
+      display: flex;
+      align-items: center;
     }
 
     &__offset {
       width: 50px;
+    }
+  }
+
+  &__comments {
+    margin-left: 20px;
+    width: 50%;
+
+    $bar-width: 8px;
+
+    &__scroll {
+      @extend %button;
+      width: calc(100% - #{$bar-width});
+    }
+
+    &__wrapper {
+      margin-top: 10px;
+      max-height: 300px;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar {
+        width: $bar-width;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #333333;
+        border-radius: $bar-width;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #555555;
+        border-radius: $bar-width;
+      }
+    }
+
+    table {
+      position: relative;
+      border-collapse: separate; 
+      border-spacing: 0;
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    th, td {
+      padding: 0 3px;
       color: #fff;
-      background-color: transparent;
+      border: 1px solid #fff;
+
+      &:first-child {
+        width: 65px;
+      }
+
+      &:not(:first-child) {
+        border-left: 0;
+      }
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      font-weight: 700;
+      background-color: #444;
+    }
+
+    td {
+      font-size: 14px;
+      border-top: none;
+    }
+
+    &__row {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #383838;
+      }
+    }
+
+    &__time {
+      text-align: right;
+      font-family: monospace;
+    }
+
+    &__comment {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }
