@@ -35,7 +35,8 @@ function buildControl(retryCount = 0) {
   }
   const offsetInput = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
   offsetInput.addEventListener('input', () => {
-    updateOffset((offsetInput.value === '') ? null : Number(offsetInput.value));
+    const newOffset = (offsetInput.value === '') ? null : Number(offsetInput.value);
+    updateOffset(newOffset, false);
   })
 
   const execute = document.querySelector<HTMLButtonElement>('.nicotver__conditions__execute')!;
@@ -56,10 +57,12 @@ function buildControl(retryCount = 0) {
 }
 
 
-function updateOffset(newOffset: number | null) {
+function updateOffset(newOffset: number | null, updateInput = true) {
   offset = newOffset || 0;
-  const current = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
-  current.value = String(newOffset || '');
+  if (updateInput) {
+    const current = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
+    current.value = String(offset);
+  }
 }
 
 
@@ -137,7 +140,7 @@ async function prepareComment(channel: string, startTime: string, duration: numb
 
 
 function reset() {
-  offset = 0;
+  updateOffset(0);
   if (intervalId !== null) clearInterval(intervalId);
   const canvas = document.querySelector('.nicotver__canvas');
   if (canvas) canvas.remove();
