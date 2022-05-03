@@ -9,9 +9,8 @@ let intervalId: number | null = null;
 
 async function buildControl() {
   try {
-    if (document.querySelector('.nicotver__controls')) return;
-
     let titles = await getTitles();
+    if (document.querySelector('.nicotver__controls')) return;  // 2重実行を防止する。awaitの後じゃないと2重に実行する隙がある
     titles.insertAdjacentHTML('beforebegin', HTMLS.CONTROL);
     reset(0);
 
