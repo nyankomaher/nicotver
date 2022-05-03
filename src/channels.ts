@@ -33,7 +33,6 @@ registerChannels('jk4', `
   長崎国際テレビ
   KKTくまもと県民テレビ
   鹿児島読売テレビ
-  BS日テレ
 `);
 
 registerChannels('jk5', `
@@ -97,11 +96,11 @@ registerChannels('jk9', 'TOKYO MX');
 registerChannels('jk10', 'テレ玉');
 registerChannels('jk11', 'tvk');
 registerChannels('jk12', 'チバテレ');
-registerChannels('jk141', 'ＢＳ日テレ');
-registerChannels('jk151', 'ＢＳ朝日');
+registerChannels('jk141', 'BS日テレ');
+registerChannels('jk151', 'BS朝日');
 registerChannels('jk161', 'BS-TBS');
 registerChannels('jk171', 'ＢＳテレ東');
-registerChannels('jk181', 'ＢＳフジ');
+registerChannels('jk181', 'BSフジ');
 registerChannels('jk211', 'BS11');
 registerChannels('jk222', 'BS12');
 
