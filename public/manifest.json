@@ -13,6 +13,12 @@
     "default_title": "Nicotver",
     "default_popup": "popup.html"
   },
+  "permissions": [
+     "webNavigation"
+  ],
+  "background":{
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [

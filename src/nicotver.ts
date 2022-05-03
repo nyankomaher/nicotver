@@ -6,54 +6,71 @@ import './nicotver.scss';
 let offset = 0;
 let intervalId: number | null = null;
 
+async function buildControl() {
+  try {
+    let titles = await getTitles();
+    titles.insertAdjacentHTML('beforebegin', HTMLS.CONTROL);
+    reset(0);
 
-function buildControl(retryCount = 0) {
-  const titles = document.querySelector('[class^=titles_container]');
-  if (!titles) {
-    if (retryCount < 30) {
-      console.log({retryCount})
-      setTimeout(() => buildControl(++retryCount), 1000);
-    } else {
-      alert('nicotverの初期化に失敗しました。');
-    }
-    return;
-  }
-
-  titles.insertAdjacentHTML('beforebegin', HTMLS.CONTROL);
-
-  const info = getProgramInfo();
-  const channel = document.querySelector<HTMLSelectElement>('.nicotver__condition__channel')!;
-  if (info.channel) channel.value = info.channel;
-  const date = document.querySelector<HTMLInputElement>('.nicotver__condition__date')!;
-  if (info.date) date.value = info.date;
-
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.nicotver__offsets__button');
-  for (let button of buttons) {
-    button.addEventListener('click', () => {
-      updateOffset(Number(button.dataset.offset) + offset);
-    })
-  }
-  const offsetInput = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
-  offsetInput.addEventListener('input', () => {
-    const newOffset = (offsetInput.value === '') ? null : Number(offsetInput.value);
-    updateOffset(newOffset, false);
-  })
-
-  const execute = document.querySelector<HTMLButtonElement>('.nicotver__conditions__execute')!;
-  execute.addEventListener('click', () => {
+    const info = getProgramInfo();
     const channel = document.querySelector<HTMLSelectElement>('.nicotver__condition__channel')!;
+    if (info.channel) channel.value = info.channel;
     const date = document.querySelector<HTMLInputElement>('.nicotver__condition__date')!;
-    const time = document.querySelector<HTMLInputElement>('.nicotver__condition__time')!;
-    const duration = document.querySelector<HTMLSelectElement>('.nicotver__condition__duration')!;
-    prepareComment(
-      channel.value,
-      `${date.value}T${time.value}+09:00`,
-      Number(duration.value)
-    );
-  });
+    if (info.date) date.value = info.date;
 
-  const scroll = document.querySelector('.nicotver__comments__scroll')!;
-  scroll.addEventListener('click', scrollToPlayingPosition);
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.nicotver__offsets__button');
+    for (let button of buttons) {
+      button.addEventListener('click', () => {
+        updateOffset(Number(button.dataset.offset) + offset);
+      })
+    }
+    const offsetInput = document.querySelector<HTMLInputElement>('.nicotver__offsets__offset')!;
+    offsetInput.addEventListener('input', () => {
+      const newOffset = (offsetInput.value === '') ? null : Number(offsetInput.value);
+      updateOffset(newOffset, false);
+    })
+
+    const execute = document.querySelector<HTMLButtonElement>('.nicotver__conditions__execute')!;
+    execute.addEventListener('click', () => {
+      const channel = document.querySelector<HTMLSelectElement>('.nicotver__condition__channel')!;
+      const date = document.querySelector<HTMLInputElement>('.nicotver__condition__date')!;
+      const time = document.querySelector<HTMLInputElement>('.nicotver__condition__time')!;
+      const duration = document.querySelector<HTMLSelectElement>('.nicotver__condition__duration')!;
+      prepareComment(
+        channel.value,
+        `${date.value}T${time.value}+09:00`,
+        Number(duration.value)
+      );
+    });
+
+    const scroll = document.querySelector('.nicotver__comments__scroll')!;
+    scroll.addEventListener('click', scrollToPlayingPosition);
+
+  } catch (e) {
+    alert('nicotverの初期化に失敗しました。');
+    throw e;
+  }
+}
+
+
+function getTitles() {
+  return new Promise<Element>((resolve, reject) => {
+    let retryCount = 0;
+    let timer = setInterval(() => {
+      const titles = document.querySelector('[class^=titles_container]');
+      if (titles) {
+        clearInterval(timer);
+        resolve(titles);
+      } else {
+        if (retryCount < 30) {
+          retryCount++;
+        } else {
+          clearInterval(timer);
+          reject();
+        }
+      }
+    }, 1000);
+  });
 }
 
 
@@ -139,8 +156,8 @@ async function prepareComment(channel: string, startTime: string, duration: numb
 }
 
 
-function reset() {
-  updateOffset(0);
+function reset(newOffset = offset) {
+  updateOffset(newOffset);
   if (intervalId !== null) clearInterval(intervalId);
   const canvas = document.querySelector('.nicotver__canvas');
   if (canvas) canvas.remove();
@@ -275,10 +292,25 @@ function status(message: string) {
 
 
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === 'BUILD_CONTROL') {
+    buildControl();
+  }
+
+  // Send an empty response
+  // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
+  sendResponse({});
+  return true;
+});
+
+// background.ts → nicotver.tsの順で実行されるので、初回はbackgroundからのBUILD_CONTROLメッセージを受け取る先がなくて
+// エラーが発生する問題の対応として、nicotver実行後にbackgroundを初期化する
+chrome.runtime.sendMessage({ type: 'OBSERVE_NAVIGATION' });
+
+
+
+
 buildControl();
-
-
-
 
 
 
