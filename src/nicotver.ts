@@ -9,6 +9,8 @@ let intervalId: number | null = null;
 
 async function buildControl() {
   try {
+    if (document.querySelector('.nicotver__controls')) return;
+
     let titles = await getTitles();
     titles.insertAdjacentHTML('beforebegin', HTMLS.CONTROL);
     reset(0);
@@ -294,8 +296,8 @@ function status(message: string) {
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'BUILD_CONTROL') {
-    buildControl();
+  if (request.type === 'NAVIGATION') {
+    onNavigation(request.payload.details.url);
   }
 
   // Send an empty response
@@ -308,10 +310,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // エラーが発生する問題の対応として、nicotver実行後にbackgroundを初期化する
 chrome.runtime.sendMessage({ type: 'OBSERVE_NAVIGATION' });
 
+function onNavigation(url: string) {
+  // TVerがNextJSを使用しているため？manifest.jsonのmatchesを"*://tver.jp/episodes/*"にしていると
+  // 視聴ページ以外からTVerに入ってから視聴ページに遷移した場合、nicotverが読み込まれなくなる。
+  // そのためmatchesを"*://tver.jp/*"とし、Controlはepisodes以下だけで表示するようにする。
+  if (url.match(/:\/\/tver\.jp\/episodes\/.+/)) {
+    buildControl();
+  }
+}
 
 
 
-buildControl();
+onNavigation(window.location.href);
 
 
 

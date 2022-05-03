@@ -22,7 +22,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://tver.jp/episodes/*"
+        "*://tver.jp/*"
       ],
       "run_at": "document_idle",
       "css": ["nicotver.css"],

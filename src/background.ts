@@ -12,13 +12,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 function observeNavigation() {
   chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-    console.log({details})
-    if (!details.url.match(/:\/\/tver\.jp\/episodes\/.+/)) return;
 
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       const tab = tabs[0];
       chrome.tabs.sendMessage(tab.id!, {
-        type: 'BUILD_CONTROL',
+        type: 'NAVIGATION',
         payload: {
           details
         }
