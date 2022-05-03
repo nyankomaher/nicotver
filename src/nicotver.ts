@@ -1,5 +1,6 @@
 // @ts-ignore
 import NiconiComments from '@xpadev-net/niconicomments';
+import CHANNELS from './channels';
 import './nicotver.scss';
 
 
@@ -419,18 +420,6 @@ const HTMLS = {
   `
 }
 
-const CHANNELS: {[key: string]: string} = {
-  'NHK総合': 'jk1',
-  'NHK Eテレ': 'jk2',
-  '日テレ': 'jk4',
-  'テレビ朝日': 'jk5',
-  'KBCテレビ': 'jk5',
-  'ABCテレビ': 'jk5',
-  'TBS': 'jk6',
-  'テレビ東京': 'jk7',
-  'フジテレビ': 'jk8',
-  'テレ玉': 'jk10',
-}
 
 type Comment = {
   chat: {
