@@ -45,6 +45,10 @@
       margin-top: $condition-margin;
     }
 
+    dt {
+      color: #FFF;
+    }
+
     dd {
       margin-left: 10px;
     }
@@ -73,6 +77,10 @@
     &__offset {
       width: 50px;
     }
+  }
+
+  &__status {
+    color: #FFF;
   }
 
   &__comments {

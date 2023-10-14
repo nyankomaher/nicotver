@@ -86,13 +86,13 @@ function updateOffset(newOffset: number | null, updateInput = true) {
 
 
 function getProgramInfo() {
-  const meta = document.querySelector('[class^=description_metaDetail]');
-  if (!meta) return {};
+  const metas = document.querySelectorAll('[class^=description_metaDetail]');
+  if (metas.length === 0) return {};
 
   const info: {channel?: string, date?: string} = {};
-  const [channel, date] = meta.childNodes;
-  const channelText = (channel as HTMLElement).innerText;
-  const dateText = (date as HTMLElement).innerText;
+  const [channel, date] = metas;
+  const channelText = (channel as HTMLElement)?.innerText;
+  const dateText = (date as HTMLElement)?.innerText;
   for (let name in CHANNELS) {
     if (channelText.startsWith(name)) {
       info.channel = CHANNELS[name];
@@ -310,6 +310,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.sendMessage({ type: 'OBSERVE_NAVIGATION' });
 
 function onNavigation(url: string) {
+  // console.log('onNavigation', url)
   // TVerがNextJSを使用しているため？manifest.jsonのmatchesを"*://tver.jp/episodes/*"にしていると
   // 視聴ページ以外からTVerに入ってから視聴ページに遷移した場合、nicotverが読み込まれなくなる。
   // そのためmatchesを"*://tver.jp/*"とし、Controlはepisodes以下だけで表示するようにする。
