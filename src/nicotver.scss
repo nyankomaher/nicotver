@@ -89,9 +89,25 @@
 
     $bar-width: 8px;
 
-    &__scroll {
-      @extend %button;
+    &__buttons {
+      display: flex;
       width: calc(100% - #{$bar-width});
+    }
+
+    &__button {
+      @extend %button;
+
+      &.-scroll {
+        width: 100%;
+      }
+
+      &.-part {
+        width: 25px;
+      }
+
+      &:nth-child(n + 2) {
+        margin-left: 5px;
+      }
     }
 
     &__wrapper {

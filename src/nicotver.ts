@@ -45,8 +45,13 @@ async function buildControl() {
       );
     });
 
-    const scroll = document.querySelector('.nicotver__comments__scroll')!;
+    const scroll = document.querySelector('.nicotver__comments__button.-scroll')!;
     scroll.addEventListener('click', scrollToPlayingPosition);
+
+    const parts = document.querySelectorAll<HTMLButtonElement>('.nicotver__comments__button.-part')!;
+    for (let part of parts) {
+      part.addEventListener('click', () => scrollToPart(part.dataset.part as string));
+    }
 
   } catch (e) {
     alert('nicotverの初期化に失敗しました。');
@@ -248,9 +253,7 @@ function updateOffsetToComment(e: Event) {
 }
 
 function scrollToPlayingPosition() {
-  const wrapper = document.querySelector('.nicotver__comments__wrapper')!;
-  const header = wrapper.querySelector<HTMLTableRowElement>('thead tr')!;
-  const comments = wrapper.querySelectorAll<HTMLTableRowElement>('tbody tr');
+  const comments = document.querySelectorAll<HTMLTableRowElement>('.nicotver__comments__wrapper tbody tr');
   const video = document.querySelector<HTMLMediaElement>('.vjs-tech');
   if (!video) return;
 
@@ -263,9 +266,38 @@ function scrollToPlayingPosition() {
     if (!currentComment) return;
   }
 
+  scrollToComment(currentComment);
+}
+
+function scrollToComment(comment: HTMLTableRowElement) {
+  const wrapper = document.querySelector('.nicotver__comments__wrapper')!;
+  const header = wrapper.querySelector<HTMLTableRowElement>('thead tr')!;
   const wrapperHeight = wrapper.getBoundingClientRect().height;
   const headerHeight = header.getBoundingClientRect().height;
-  wrapper.scrollTop = currentComment.offsetTop - headerHeight - wrapperHeight / 2;
+  wrapper.scrollTop = comment.offsetTop - headerHeight - wrapperHeight / 2;
+}
+
+function scrollToPart(part: string) {
+  const comments = document.querySelectorAll<HTMLTableRowElement>('.nicotver__comments__wrapper tbody tr');
+  let count = 0;
+  for (let comment of comments) {
+    const text = comment.querySelector('.nicotver__comments__comment')?.textContent;
+    const nomalized = normalize(text);
+    if (nomalized === part) {
+      count++;
+    }
+    if (count >= 5) {
+      scrollToComment(comment);
+      return;
+    }
+  }
+  alert(`${part}パートと思しき箇所が見つかりませんでした。`);
+}
+
+function normalize(str: string | null | undefined) {
+  return (str || '').replace(/[Ａ-Ｚａ-ｚ０-９！-～]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  }).toUpperCase();
 }
 
 
@@ -412,7 +444,12 @@ const HTMLS = {
       </div>
 
       <div class="nicotver__comments">
-        <button class="nicotver__comments__scroll">再生位置までスクロール</button>
+        <div class="nicotver__comments__buttons">
+          <button class="nicotver__comments__button -scroll">再生位置までスクロール</button>
+          <button class="nicotver__comments__button -part" data-part="A">A</button>
+          <button class="nicotver__comments__button -part" data-part="B">B</button>
+          <button class="nicotver__comments__button -part" data-part="C">C</button>
+        </div>
         <div class="nicotver__comments__wrapper">
           <table>
             <thead>
