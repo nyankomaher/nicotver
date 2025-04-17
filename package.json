@@ -4,8 +4,8 @@
   "description": "My Chrome Extension",
   "private": true,
   "scripts": {
-    "watch": "webpack --mode=development --watch --config config/webpack.config.js",
-    "build": "webpack --mode=production --config config/webpack.config.js"
+    "watch": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --watch --config config/webpack.config.js",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --config config/webpack.config.js"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.181",
