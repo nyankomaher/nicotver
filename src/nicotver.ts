@@ -131,7 +131,7 @@ async function prepareComment(channel: string, startTime: string, duration: numb
     reset();
     dom = buildCanvas();
   } catch (e: any) {
-    status(`TVer側の準備がまだできていないかもです。少し待ってコメントを再取得してください。（${e.message} is not found）。`)
+    status(`TVer側の準備がまだできていないかもです。少し待ってコメントを再取得してください。（${e.message}）。`)
     return;
   }
 
@@ -174,7 +174,7 @@ function reset(newOffset = offset) {
 
 
 function buildCanvas(): {canvas: HTMLCanvasElement, video: HTMLMediaElement} {
-  const container = document.querySelector('video-js');
+  const container = document.querySelector('#vjs_video_3');
   if (!container) {
     throw new Error('container is not found.');
   }
