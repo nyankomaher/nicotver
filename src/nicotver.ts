@@ -64,7 +64,8 @@ function getTitles() {
   return new Promise<Element>((resolve, reject) => {
     let retryCount = 0;
     let timer = setInterval(() => {
-      const titles = document.querySelector('[class^=titles_container]');
+      // 2026-10 TVerのDOM変更に対応（旧: [class^=titles_container]）
+      const titles = document.querySelector('[class*=EpisodeDescription_root]') || document.querySelector('[class^=titles_container]');
       if (titles) {
         clearInterval(timer);
         resolve(titles);
@@ -91,17 +92,23 @@ function updateOffset(newOffset: number | null, updateInput = true) {
 
 
 function getProgramInfo() {
-  const metas = document.querySelectorAll('[class^=description_metaDetail]');
-  if (metas.length === 0) return {};
-
+  // 2026-10 TVerのDOM変更に対応: 放送局と放送日が1つのmetaDetail内の別要素になった
   const info: {channel?: string, date?: string} = {};
-  const [channel, date] = metas;
-  const channelText = (channel as HTMLElement)?.innerText;
-  const dateText = (date as HTMLElement)?.innerText;
-  for (let name in CHANNELS) {
-    if (channelText.startsWith(name)) {
-      info.channel = CHANNELS[name];
-      break;
+  let channelEl = document.querySelector('[class*=EpisodeDescription_producer]') as HTMLElement | null;
+  let dateEl = document.querySelector('[class*=EpisodeDescription_broadcastDateLabel]') as HTMLElement | null;
+  if (!channelEl || !dateEl) {
+    const metas = document.querySelectorAll('[class^=description_metaDetail]');
+    channelEl = channelEl || (metas[0] as HTMLElement) || null;
+    dateEl = dateEl || (metas[1] as HTMLElement) || null;
+  }
+  const channelText = channelEl?.innerText?.trim() || '';
+  const dateText = dateEl?.innerText || '';
+  if (channelText) {
+    for (let name in CHANNELS) {
+      if (channelText.startsWith(name)) {
+        info.channel = CHANNELS[name];
+        break;
+      }
     }
   }
 
